@@ -34,7 +34,47 @@ var connection = mysql.createConnection({
 
 
 
+var uploadimage = multer({
+  storage: multerAzure({
+    account: 'logifilkes', //The name of the Azure storage account
+    key: '6Fe5CO+e23a+ttd52n8bLNOMCdjo05FPUSqr9ShlpnJo6KiocLBeMORrRWS3V7vTcbDHRVHpMvcl+AStp1nk5Q==', //A key listed under Access keys in the storage account pane
+    container: 'logo',  //Any container name, it will be created if it doesn't exist
+    blobPathResolver: function (req, file, callback) {
+      var blobPath = GetRandomId(1080, 800000) + ".jpg"
+      callback(null, blobPath);
+    }
+  })
+})
 
+const sendFireBaseNotifications = (registrationToken, _title, _body) => {
+
+  try {
+
+    const message = {
+      data: {
+        title: _title,
+        body: _body
+      },
+      token: registrationToken
+    };
+    admin.messaging().send(message)
+      .then((response) => {
+        console.log('Notification sent:', response);
+      })
+      .catch((error) => {
+        console.error('Error sending notification:', error);
+      });
+  }
+  catch (err) {
+
+
+
+
+
+  }
+
+
+};
 
 
 
